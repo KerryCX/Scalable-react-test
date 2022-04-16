@@ -1,25 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import {Box, Container, Typography} from "@mui/material";
+import TextField from "@mui/material/TextField";
+import React, {useEffect, useState} from "react";
+import {StyledCard} from "./components/Card";
 
-function App() {
+export const App = () => {
+  const [loading, setIsLoading] = useState(false)
+  const [data, setData] = useState([])
+  const [slicedData, setSlicedData] = useState([])
+  const limit = 4
+
+  useEffect(() => {
+    fetch("https://emojihub.herokuapp.com/api/all")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoading(true);
+          setData(result);
+        },
+        (error) => {
+          setIsLoading(true);
+          console.log(error);
+        }
+      )
+  }, [])
+
+  useEffect(() => {
+    if(data) {
+      setSlicedData(data.splice(0, limit))
+    }
+  }, [data])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <Box p={5} primary>
+        <Typography variant='h1' align='center'>
+          EMOJI LIST
+        </Typography>
+      </Box>
+      <Container>
+        <Box p={2}>
+          <TextField
+            label="Limit"
+            type='number'
+            defaultValue={limit} />
+        </Box>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap'}}>
+          {slicedData.length && slicedData.map((props, i) => (
+            <StyledCard {...props} key={i}/>
+          ))}
+        </Box>
+      </Container>
+    </>
+  )
 }
 
 export default App;
