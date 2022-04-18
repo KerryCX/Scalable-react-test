@@ -5,15 +5,19 @@ import { StyledCard } from "./components/Card";
 import { CircularIndeterminate } from "./components/Progress"
 
 export const App = () => {
+
   const [loading, setIsLoading] = useState(false)
   const [data, setData] = useState([])
   const [slicedData, setSlicedData] = useState([])
   const [limit, setLimit] = useState([4])
+  
   const updateLimit = (event) => {
     setLimit(event.target.value);
   };
 
   useEffect(() => {
+    //set to false here so that the progress indicator shows while it is fetching. 
+    setIsLoading(false);
     fetch("https://emojihub.herokuapp.com/api/all")
       .then(res => res.json())
       .then(
@@ -35,11 +39,6 @@ export const App = () => {
     }
   }, [data, limit])
 
-  useEffect(() => {
-    if(loading){
-      console.log("oi")
-    }
-  })
   return (
     <>
       <Box p={5} primary>
@@ -56,12 +55,16 @@ export const App = () => {
             defaultValue={limit}
             >{limit}</TextField>
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center'}}><CircularIndeterminate/></Box>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap'}}>
-          {slicedData.length && slicedData.map((props, i) => (
-            <StyledCard {...props} key={i}/>
+        {!loading ? ( 
+          <Box sx={{ display: 'flex', justifyContent: 'center'}}>
+            <CircularIndeterminate/></Box>
+        ) : loading && (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap'}}>
+            {slicedData.length && slicedData.map((props, i) => (
+              <StyledCard {...props} key={i}/>
           ))}
-        </Box>
+          </Box>
+        )}
       </Container>
     </>
   )
