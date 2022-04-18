@@ -7,7 +7,10 @@ export const App = () => {
   const [loading, setIsLoading] = useState(false)
   const [data, setData] = useState([])
   const [slicedData, setSlicedData] = useState([])
-  const limit = 4
+  const [limit, setLimit] = useState([4])
+  const updateLimit = (event) => {
+    setLimit(event.target.value);
+  };
 
   useEffect(() => {
     fetch("https://emojihub.herokuapp.com/api/all")
@@ -28,7 +31,7 @@ export const App = () => {
     if(data) {
       setSlicedData(data.splice(0, limit))
     }
-  }, [data])
+  }, [data, limit])
 
 
   return (
@@ -40,10 +43,12 @@ export const App = () => {
       </Box>
       <Container>
         <Box p={2}>
-          <TextField
+          <TextField 
+            onChange={updateLimit}
             label="Limit"
             type='number'
-            defaultValue={limit} />
+            defaultValue={limit}
+            >{limit}</TextField>
         </Box>
         <Box sx={{ display: 'flex', flexWrap: 'wrap'}}>
           {slicedData.length && slicedData.map((props, i) => (
