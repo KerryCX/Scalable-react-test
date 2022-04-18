@@ -1,15 +1,23 @@
-import {Box, Container, Typography} from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, {useEffect, useState} from "react";
-import {StyledCard} from "./components/Card";
+import { StyledCard } from "./components/Card";
+import { CircularIndeterminate } from "./components/Progress"
 
 export const App = () => {
+
   const [loading, setIsLoading] = useState(false)
   const [data, setData] = useState([])
   const [slicedData, setSlicedData] = useState([])
-  const limit = 4
+  const [limit, setLimit] = useState([4])
+  
+  const updateLimit = (event) => {
+    setLimit(event.target.value);
+  };
 
   useEffect(() => {
+    //set to false here so that the progress indicator shows while it is fetching. 
+    setIsLoading(false);
     fetch("https://emojihub.herokuapp.com/api/all")
       .then(res => res.json())
       .then(
@@ -24,12 +32,12 @@ export const App = () => {
       )
   }, [])
 
+  
   useEffect(() => {
     if(data) {
       setSlicedData(data.splice(0, limit))
     }
-  }, [data])
-
+  }, [data, limit])
 
   return (
     <>
@@ -40,16 +48,23 @@ export const App = () => {
       </Box>
       <Container>
         <Box p={2}>
-          <TextField
+          <TextField 
+            onChange={updateLimit}
             label="Limit"
             type='number'
-            defaultValue={limit} />
+            defaultValue={limit}
+            >{limit}</TextField>
         </Box>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap'}}>
-          {slicedData.length && slicedData.map((props, i) => (
-            <StyledCard {...props} key={i}/>
+        {!loading ? ( 
+          <Box sx={{ display: 'flex', justifyContent: 'center'}}>
+            <CircularIndeterminate/></Box>
+        ) : loading && (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap'}}>
+            {slicedData.length && slicedData.map((props, i) => (
+              <StyledCard {...props} key={i}/>
           ))}
-        </Box>
+          </Box>
+        )}
       </Container>
     </>
   )

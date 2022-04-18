@@ -20,3 +20,8 @@ So this is app displays a basic list of Emoji's from an [emoji api](https://gith
 #### Bonus challenges
 
  - Add a Loading component, when the data is being fetched
+
+#### Kerry's Comments
+I called the component file I created Progress.js but would normally end it with .jsx.
+I would change the update text field to be more styled and not allow negative numbers.
+I took under 30 minutes with the first part, with some interruptions. I returned to the bonus part later, after I had performed my Mum's taxi duties :-)
