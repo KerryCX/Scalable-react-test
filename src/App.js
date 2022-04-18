@@ -1,7 +1,8 @@
-import {Box, Container, Typography} from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, {useEffect, useState} from "react";
-import {StyledCard} from "./components/Card";
+import { StyledCard } from "./components/Card";
+import { CircularIndeterminate } from "./components/Progress"
 
 export const App = () => {
   const [loading, setIsLoading] = useState(false)
@@ -27,13 +28,18 @@ export const App = () => {
       )
   }, [])
 
+  
   useEffect(() => {
     if(data) {
       setSlicedData(data.splice(0, limit))
     }
   }, [data, limit])
 
-
+  useEffect(() => {
+    if(loading){
+      console.log("oi")
+    }
+  })
   return (
     <>
       <Box p={5} primary>
@@ -50,6 +56,7 @@ export const App = () => {
             defaultValue={limit}
             >{limit}</TextField>
         </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center'}}><CircularIndeterminate/></Box>
         <Box sx={{ display: 'flex', flexWrap: 'wrap'}}>
           {slicedData.length && slicedData.map((props, i) => (
             <StyledCard {...props} key={i}/>
